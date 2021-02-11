@@ -1,0 +1,43 @@
+<html>
+  <head>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js">
+    </script>
+  </head>
+  <body onload = "getData();">
+    <div id = "graph1"></div>
+    <div id = "graph2"></div>
+    <div id = "graph3"></div>
+    <script>
+      function ajaxGetRequest(path, callback) {
+        let request = new XMLHttpRequest();
+        request.onreadystatechange = function() {
+          if (this.readyState===4 && this.status ===200) {
+            callback(this.response);
+          }
+        }
+        request.open("GET", path);
+        request.send();
+      }
+      function showGraph (response){
+        let resp = JSON.parse(response);
+        let div = resp.div;
+        var data = [
+                    {
+                      x: resp.x,
+                      y: resp.y,
+                      type: resp.type
+                    }
+                  ];
+        Plotly.newPlot(div ,data);
+      }
+      function showGraph1 (response){
+        console.log(response);
+      }
+      function getData(){
+        ajaxGetRequest("/permitsByMonth",showGraph)
+        ajaxGetRequest("/permitsByYear", showGraph)
+        ajaxGetRequest("/permitsScatter", showGraph1)
+      }
+    </script>
+  </body>
+</html>
